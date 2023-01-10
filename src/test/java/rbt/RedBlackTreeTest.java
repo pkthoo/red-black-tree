@@ -42,7 +42,9 @@ class RedBlackTreeTest {
         for (int i = 0; i < N; i++) data.add(i);
         Collections.shuffle(data);
         System.out.println("shuffled data = " + data);
-        data.forEach(tree::insert);
+        for (Integer i : data) {
+            Assertions.assertTrue(tree.insert(i));
+        }
         Assertions.assertEquals(N, tree.size());
         System.out.println("  sorted data = " + tree.values());
 
@@ -53,7 +55,7 @@ class RedBlackTreeTest {
         }
 
         // insert existing number
-        tree.insert(10);
+        Assertions.assertFalse(tree.insert(10));
 
         // assert that nothing has changed
         Assertions.assertEquals(N, tree.size());
@@ -103,7 +105,7 @@ class RedBlackTreeTest {
     }
 
     public List<RedBlackTree.Node<Integer>> getNodes(RedBlackTree<Integer> tree) {
-        RedBlackTree.Node<Integer> root = tree.getRoot();
+        RedBlackTree.Node<Integer> root = tree.root();
         if (root == null) return Collections.emptyList();
         List<RedBlackTree.Node<Integer>> list = new ArrayList<>(tree.size());
         RedBlackTree.traverse(root, list::add);

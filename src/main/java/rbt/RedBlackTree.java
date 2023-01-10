@@ -23,11 +23,11 @@ public class RedBlackTree<V> {
         return size;
     }
 
-    public void insert(V value) {
+    public boolean insert(V value) {
         if (root == null) {
             root = new Node<>(value);
             size = 1;
-            return;
+            return true;
         }
 
         Node<V> node = root;
@@ -44,7 +44,7 @@ public class RedBlackTree<V> {
                 node = node.right;
             } else {
                 node.value = value;
-                return;
+                return false;
             }
         } while (node != null);
 
@@ -57,15 +57,16 @@ public class RedBlackTree<V> {
         }
         fixAfterInsertion(node);
         size++;
+        return true;
     }
 
     public V remove(V value) {
-        Node<V> p = getEntry(value);
+        Node<V> p = node(value);
         if (p == null)
             return null;
 
         V oldValue = p.value;
-        deleteEntry(p);
+        deleteNode(p);
         return oldValue;
     }
 
@@ -78,11 +79,15 @@ public class RedBlackTree<V> {
         return new Values();
     }
 
-    Node<V> getRoot() {
+    Node<V> root() {
         return root;
     }
 
-    private Node<V> getEntry(V value) {
+    Comparator<V> comparator() {
+        return comparator;
+    }
+
+    private Node<V> node(V value) {
         Node<V> p = root;
         while (p != null) {
             int cmp = comparator.compare(value, p.value);
@@ -253,7 +258,7 @@ public class RedBlackTree<V> {
         }
     }
 
-    private void deleteEntry(Node<V> p) {
+    private void deleteNode(Node<V> p) {
         size--;
 
         // If strictly internal, copy successor's element to p and then make p
@@ -337,7 +342,7 @@ public class RedBlackTree<V> {
         }
     }
 
-    private Node<V> getFirstEntry() {
+    Node<V> firstNode() {
         Node<V> p = root;
         if (p != null)
             while (p.left != null)
@@ -345,11 +350,17 @@ public class RedBlackTree<V> {
         return p;
     }
 
-    private Node<V> getLastEntry() {
+    Node<V> lastNode() {
         Node<V> p = root;
         if (p != null)
             while (p.right != null)
                 p = p.right;
+        return p;
+    }
+
+    Node<V> removeLastNode() {
+        Node<V> p = lastNode();
+        if (p != null) deleteNode(p);
         return p;
     }
 
@@ -362,7 +373,7 @@ public class RedBlackTree<V> {
     private class Values extends AbstractCollection<V> {
 
         public Iterator<V> iterator() {
-            return new ValueIterator(getFirstEntry());
+            return new ValueIterator(firstNode());
         }
 
         public int size() {
