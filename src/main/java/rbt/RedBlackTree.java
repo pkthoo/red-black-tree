@@ -402,7 +402,6 @@ public class RedBlackTree<V> {
         Node<V> parent;
         V value;
         boolean color;
-        int pos;
 
         Node(V value) {
             this.parent = null;

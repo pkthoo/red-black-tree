@@ -15,6 +15,24 @@ import java.util.concurrent.atomic.LongAdder;
 class RedBlackTreeTest {
 
     @Test
+    void insert0() {
+        Comparator<Integer> comparator = Comparator.reverseOrder();
+        RedBlackTree<Integer> tree = new RedBlackTree<>(comparator);
+
+        List<Integer> data = new ArrayList<>();
+        final int N = 20;
+        for (int i = 0; i < N; i++) data.add(i);
+        Collections.shuffle(data);
+        System.out.println("shuffled data = " + data);
+        for (Integer i : data) {
+            tree.insert(i);
+            System.out.println("["+i+"]");
+            printTreeDeep(tree);
+            System.out.println();
+        }
+    }
+
+    @Test
     void insert() {
         Comparator<Integer> comparator = Comparator.reverseOrder();
         RedBlackTree<Integer> tree = new RedBlackTree<>(comparator);
@@ -59,12 +77,20 @@ class RedBlackTreeTest {
         }
     }
 
+    private void printTreeDeep(RedBlackTree<Integer> tree) {
+        List<RedBlackTree.Node<Integer>> nodes = getNodes(tree);
+        for (int i = 0; i < nodes.size(); i++) {
+            RedBlackTree.Node<Integer> node = nodes.get(i);
+            System.out.printf("%2d | %s%n", i, toStringDeep(node));
+        }
+    }
+
     private void printTree(RedBlackTree<Integer> tree) {
-        RedBlackTree.Node<Integer> root = tree.getRoot();
-        System.out.println("root : "+toString(root));
-        System.out.println("root.count : "+count(root));
-        System.out.println("left.count : "+count(root.left));
-        System.out.println("right.count : "+count(root.right));
+        //RedBlackTree.Node<Integer> root = tree.getRoot();
+        //System.out.println("root : "+toString(root));
+        //System.out.println("root.count : "+count(root));
+        //System.out.println("left.count : "+count(root.left));
+        //System.out.println("right.count : "+count(root.right));
         //System.out.println("root.left : "+toStringDeep(root.left));
         //System.out.println("root.right : "+toStringDeep(root.right));
         //System.out.println("root.parent : "+toStringDeep(root.parent));
@@ -96,7 +122,6 @@ class RedBlackTreeTest {
         return "{" +
                 "val=" + node.value +
                 ", clr=" + (node.color == RedBlackTree.RED ? "RED" : "BLACK") +
-                ", pos=" + node.pos +
                 '}';
     }
 
@@ -105,7 +130,6 @@ class RedBlackTreeTest {
         return "{" +
                 "val=" + node.value +
                 ", clr=" + (node.color == RedBlackTree.RED ? "RED" : "BLACK") +
-                ", pos=" + node.pos +
                 ", l=" + toStringDeep(node.left) +
                 ", r=" + toStringDeep(node.right) +
                 '}';
