@@ -1,6 +1,7 @@
 package rbt;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Created by Augustus Thoo on 9/1/2023
@@ -75,6 +76,10 @@ public class RedBlackTree<V> {
 
     public Collection<V> values() {
         return new Values();
+    }
+
+    Node<V> getRoot() {
+        return root;
     }
 
     private Node<V> getEntry(V value) {
@@ -346,6 +351,12 @@ public class RedBlackTree<V> {
             while (p.right != null)
                 p = p.right;
         return p;
+    }
+
+    static <V> void traverse(Node<V> t, Consumer<Node<V>> c) {
+        if (t.left != null) traverse(t.left, c);
+        c.accept(t);
+        if (t.right != null) traverse(t.right, c);
     }
 
     private class Values extends AbstractCollection<V> {
